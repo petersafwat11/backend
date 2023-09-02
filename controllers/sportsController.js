@@ -48,14 +48,27 @@ exports.handleNewFiles = async (req, res, next) => {
   next();
 };
 exports.handleEditedFiles = async (req, res, next) => {
-  const unlinkAsync = util.promisify(fs.unlink);
   try {
-    const deletedItem = await Sport.findById(req.params.id);
-    if (!deletedItem) {
+    const unlinkAsync = util.promisify(fs.unlink);
+
+    if (!req.files) {
+      next();
+    }
+
+    const editedItem = await Sport.findById(req.params.id);
+    if (!editedItem) {
       next(new AppError("there is no doc found with that id", 404));
     }
     const { backgroundLogo, leagueLogo, firstTeamLogo, secondTeamLogo } =
-      deletedItem;
+      editedItem;
+    // console.log(
+    //   backgroundLogo,
+    //   leagueLogo,
+    //   firstTeamLogo,
+    //   secondTeamLogo,
+    //   req.files
+    // );
+
     if (req.files.backgroundLogo) {
       await unlinkAsync(`public/img/matches/${backgroundLogo}`);
       req.body.backgroundLogo = req.files.backgroundLogo[0].filename;
@@ -72,10 +85,13 @@ exports.handleEditedFiles = async (req, res, next) => {
       await unlinkAsync(`public/img/matches/${secondTeamLogo}`);
       req.body.secondTeamLogo = req.files.secondTeamLogo[0].filename;
     }
+    const data = { ...req.body };
+    delete data.servers;
+    req.body = data;
+    next();
   } catch (error) {
     next(new AppError(error.message, error.statusCode));
   }
-  next();
 };
 exports.deleteManyItemsRelatedData = async (req, res, next) => {
   try {

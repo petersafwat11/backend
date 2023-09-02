@@ -19,7 +19,6 @@ router
   .delete(
     authController.protect,
     authController.restrictTo("Manager", "Moderator", "Admin"),
-
     sportsController.deleteManyItemsRelatedData,
     sportsController.deleteSports
   );
