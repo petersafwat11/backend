@@ -8,8 +8,8 @@ router.route("/").get(linksController.getAllImportedLinks);
 router
   .route("/:id")
   .patch(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
+    // authController.protect,
+    // authController.restrictTo("Manager", "Moderator", "Admin"),
     linksController.updateImportedLinks
   );
 // .post(linksController.createImportedLinks)

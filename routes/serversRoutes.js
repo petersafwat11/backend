@@ -4,10 +4,10 @@ const serversController = require("../controllers/serversController");
 const authController = require("../controllers/authController");
 
 const router = express.Router();
-router.use(
-  authController.protect,
-  authController.restrictTo("Manager", "Moderator", "Admin")
-);
+// router.use(
+//   authController.protect,
+//   authController.restrictTo("Manager", "Moderator", "Admin")
+// );
 router.route("/").post(serversController.createServers);
 
 router

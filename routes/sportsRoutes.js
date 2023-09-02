@@ -9,16 +9,16 @@ router
   .route("/")
   .get(sportsController.getAllSports)
   .post(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
+    // authController.protect,
+    // authController.restrictTo("Manager", "Moderator", "Admin"),
 
     sportsController.uploadTourImages,
     sportsController.handleNewFiles,
     sportsController.createSport
   )
   .delete(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
+    // authController.protect,
+    // authController.restrictTo("Manager", "Moderator", "Admin"),
     sportsController.deleteManyItemsRelatedData,
     sportsController.deleteSports
   );
@@ -26,8 +26,8 @@ router
 router
   .route("/:id")
   .patch(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
+    // authController.protect,
+    // authController.restrictTo("Manager", "Moderator", "Admin"),
 
     sportsController.uploadTourImages,
     sportsController.handleEditedFiles,
@@ -35,8 +35,8 @@ router
   )
   .get(sportsController.getSport)
   .delete(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
+    // authController.protect,
+    // authController.restrictTo("Manager", "Moderator", "Admin"),
 
     sportsController.deleteOneItemRelatedData,
     sportsController.deleteSport

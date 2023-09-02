@@ -29,8 +29,8 @@ router
 router
   .route("/winner")
   .get(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
+    // authController.protect,
+    // authController.restrictTo("Manager", "Moderator", "Admin"),
     giveawayController.generateWinner
   );
 
