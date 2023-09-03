@@ -7,6 +7,7 @@ const Sport = require("../models/sportModel");
 const factory = require("./handlerFactory");
 const AppError = require("../utils/appError");
 const ServersAndLangs = require("../models/serverAndLangsModel");
+const catchAsync = require("../utils/catchAsync");
 
 // const AppError = require("../utils/appError");
 
@@ -61,14 +62,6 @@ exports.handleEditedFiles = async (req, res, next) => {
     }
     const { backgroundLogo, leagueLogo, firstTeamLogo, secondTeamLogo } =
       editedItem;
-    // console.log(
-    //   backgroundLogo,
-    //   leagueLogo,
-    //   firstTeamLogo,
-    //   secondTeamLogo,
-    //   req.files
-    // );
-
     if (req.files.backgroundLogo) {
       await unlinkAsync(`public/img/matches/${backgroundLogo}`);
       req.body.backgroundLogo = req.files.backgroundLogo[0].filename;
@@ -149,7 +142,18 @@ exports.deleteOneItemRelatedData = async (req, res, next) => {
 
   next();
 };
-
+exports.getCurrentEvents = catchAsync(async (req, res, next) => {
+  const currentDate = new Date();
+  const currentEvents = await Sport.find({
+    playStream: { $gt: currentDate },
+    removeStream: { $lt: currentDate },
+  });
+  res.statusCode(200).json({
+    status: "success",
+    data: currentEvents,
+  });
+  next();
+});
 exports.createSport = factory.createOne(Sport);
 exports.deleteSports = factory.deleteMany(Sport);
 exports.deleteSport = factory.deleteOne(Sport);

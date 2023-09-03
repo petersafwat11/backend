@@ -7,11 +7,15 @@ const channelsSchema = new mongoose.Schema({
   },
   mode: {
     type: String,
-    required: [true, "please chose the mode for this channel!"],
+    required: [true, "please chosse the mode for this channel!"],
   },
   streamLinkName: {
     type: String,
     required: [true, "please enter the stream link name for this channel!"],
+  },
+  streamLinkUrl: {
+    type: String,
+    required: [true, "please enter the stream link url for this channel!"],
   },
 });
 const Channels = mongoose.model("Channels", channelsSchema);
