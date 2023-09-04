@@ -11,6 +11,27 @@ const catchAsync = require("../utils/catchAsync");
 
 // const AppError = require("../utils/appError");
 
+exports.getCurrentEvents = catchAsync(async (req, res, next) => {
+  const query = req.query;
+  const excludedFields = ["page", "sort", "limit", "fields"];
+  excludedFields.forEach((el) => delete query[el]);
+  const currentDate = new Date();
+  console.log(query);
+  const totalOtherMatches = await Sport.find({
+    flagged: false,
+  }).countDocuments();
+  const currentEvents = await Sport.find({
+    ...query,
+    playStream: { $lt: currentDate },
+    removeStream: { $gt: currentDate },
+  });
+  res.status(200).json({
+    status: "success",
+    data: currentEvents,
+    totalOtherMatches: totalOtherMatches,
+  });
+});
+
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
@@ -24,12 +45,18 @@ const storage = multer.diskStorage({
     cb(null, "public/img/matches/");
   },
   filename: function (req, file, cb) {
+    console.log(
+      file.originalname.slice(file.originalname.lastIndexOf(".") + 1)
+    );
+
     cb(
       null,
       `${file.originalname.slice(
         0,
         file.originalname.lastIndexOf(".")
-      )}-${Date.now()}.${file.mimetype.split("/")[1]}`
+      )}-${Date.now()}.${file.originalname.slice(
+        file.originalname.lastIndexOf(".") + 1
+      )}`
     );
   },
 });
@@ -42,18 +69,26 @@ exports.uploadTourImages = upload.fields([
   { name: "secondTeamLogo", maxCount: 1 },
 ]);
 exports.handleNewFiles = async (req, res, next) => {
-  req.body.backgroundLogo = req.files.backgroundLogo[0].filename;
-  req.body.leagueLogo = req.files.leagueLogo[0].filename;
-  req.body.firstTeamLogo = req.files.firstTeamLogo[0].filename;
-  req.body.secondTeamLogo = req.files.secondTeamLogo[0].filename;
+  if (req.files.backgroundLogo) {
+    req.body.backgroundLogo = req.files.backgroundLogo[0].filename;
+  }
+  if (req.files.leagueLogo) {
+    req.body.leagueLogo = req.files.leagueLogo[0].filename;
+  }
+  if (req.files.firstTeamLogo) {
+    req.body.firstTeamLogo = req.files.firstTeamLogo[0].filename;
+  }
+  if (req.files.secondTeamLogo) {
+    req.body.secondTeamLogo = req.files.secondTeamLogo[0].filename;
+  }
   next();
 };
 exports.handleEditedFiles = async (req, res, next) => {
   try {
     const unlinkAsync = util.promisify(fs.unlink);
-
+    console.log(req.files);
     if (!req.files) {
-      next();
+      return next();
     }
 
     const editedItem = await Sport.findById(req.params.id);
@@ -142,18 +177,7 @@ exports.deleteOneItemRelatedData = async (req, res, next) => {
 
   next();
 };
-exports.getCurrentEvents = catchAsync(async (req, res, next) => {
-  const currentDate = new Date();
-  const currentEvents = await Sport.find({
-    playStream: { $gt: currentDate },
-    removeStream: { $lt: currentDate },
-  });
-  res.statusCode(200).json({
-    status: "success",
-    data: currentEvents,
-  });
-  next();
-});
+
 exports.createSport = factory.createOne(Sport);
 exports.deleteSports = factory.deleteMany(Sport);
 exports.deleteSport = factory.deleteOne(Sport);

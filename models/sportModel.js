@@ -7,6 +7,7 @@ const sportSchema = new mongoose.Schema({
   },
   sportCategory: {
     type: String,
+    lowercase: true,
     required: [true, "please enter the sports category"],
   },
   firstTeamName: {
@@ -35,19 +36,19 @@ const sportSchema = new mongoose.Schema({
   },
   backgroundLogo: {
     type: String,
-    required: [true, "please enter the background of the event"],
+    // required: [true, "please enter the background of the event"],
   },
   leagueLogo: {
     type: String,
-    required: [true, "please enter the league of the event"],
+    // required: [true, "please enter the league of the event"],
   },
   firstTeamLogo: {
     type: String,
-    required: [true, "please enter the logo of the first team"],
+    // required: [true, "please enter the logo of the first team"],
   },
   secondTeamLogo: {
     type: String,
-    required: [true, "please enter the logo of the second team"],
+    // required: [true, "please enter the logo of the second team"],
   },
   playStream: {
     type: Date,
@@ -65,16 +66,7 @@ const sportSchema = new mongoose.Schema({
   firstTeamPoll: String,
   secondTeamPoll: String,
   servers: [{ type: mongoose.Schema.Types.ObjectId, ref: "ServerAndLangs" }],
-
 });
-// sportSchema.pre("save", async function (next) {
-//   const event = this; // the current user being saved
-//   const { playStream, removeStream, removeCountdown } = event;
-//   event.playStream = new Date(playStream);
-//   event.removeStream = new Date(removeStream);
-//   event.removeCountdown = new Date(removeCountdown);
-//   next();
-// });
 
 const Sport = mongoose.model("Sport", sportSchema);
 
