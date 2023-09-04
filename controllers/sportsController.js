@@ -47,7 +47,12 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     console.log(
-      file.originalname.slice(file.originalname.lastIndexOf(".") + 1)
+      `${file.originalname.slice(
+        0,
+        file.originalname.lastIndexOf(".")
+      )}-${Date.now()}.${file.originalname.slice(
+        file.originalname.lastIndexOf(".") + 1
+      )}`
     );
 
     cb(
