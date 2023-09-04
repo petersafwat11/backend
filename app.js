@@ -51,7 +51,7 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(cors());
 app.use(
   cors({
-    origin: ["https://aj-umber.vercel.app", "http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://aj-umber.vercel.app"],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
