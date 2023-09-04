@@ -1,6 +1,7 @@
 const fsPromise = require("fs").promises;
-const fs = require("fs");
-const util = require("util");
+// const fs = require("fs");
+// const util = require("util");
+// const path = require("path");
 
 const multer = require("multer");
 const Sport = require("../models/sportModel");
@@ -12,7 +13,7 @@ const catchAsync = require("../utils/catchAsync");
 // const AppError = require("../utils/appError");
 
 exports.getCurrentEvents = catchAsync(async (req, res, next) => {
-  const query = req.query;
+  const { query } = req;
   const excludedFields = ["page", "sort", "limit", "fields"];
   excludedFields.forEach((el) => delete query[el]);
   const currentDate = new Date();
@@ -69,6 +70,9 @@ exports.uploadTourImages = upload.fields([
   { name: "secondTeamLogo", maxCount: 1 },
 ]);
 exports.handleNewFiles = async (req, res, next) => {
+  if (!req.files) {
+    return next();
+  }
   if (req.files.backgroundLogo) {
     req.body.backgroundLogo = req.files.backgroundLogo[0].filename;
   }
@@ -85,32 +89,70 @@ exports.handleNewFiles = async (req, res, next) => {
 };
 exports.handleEditedFiles = async (req, res, next) => {
   try {
-    const unlinkAsync = util.promisify(fs.unlink);
-    console.log(req.files);
+    // const unlinkAsync = util.promisify(fs.unlink);
     if (!req.files) {
       return next();
     }
 
     const editedItem = await Sport.findById(req.params.id);
+    // const filePath = (name) =>
+    //   path.join(__dirname, "public", "img", "matches", name);
+
     if (!editedItem) {
       next(new AppError("there is no doc found with that id", 404));
     }
-    const { backgroundLogo, leagueLogo, firstTeamLogo, secondTeamLogo } =
-      editedItem;
+    // const { backgroundLogo, leagueLogo, firstTeamLogo, secondTeamLogo } =
+    //   editedItem;
+
     if (req.files.backgroundLogo) {
-      await unlinkAsync(`public/img/matches/${backgroundLogo}`);
+      // const existedFile = await unlinkAsync(
+      //   `public/img/matches/${secondTeamLogo}`
+      // );
+      // fs.access(filePath(backgroundLogo), fs.constants.F_OK);
+      // console.log(`File '${filePath}' exists`);
+
+      // if (existedFile) {
+      //   await unlinkAsync(`public/img/matches/${backgroundLogo}`);
+      // }
       req.body.backgroundLogo = req.files.backgroundLogo[0].filename;
     }
     if (req.files.leagueLogo) {
-      await unlinkAsync(`public/img/matches/${leagueLogo}`);
+      // const existedFile = await fs.access(
+      //   filePath(backgroundLogo),
+      //   fs.constants.F_OK
+      // );
+      // console.log(`File '${filePath}' exists`);
+
+      // if (existedFile) {
+      //   await unlinkAsync(`public/img/matches/${leagueLogo}`);
+      // }
+
       req.body.leagueLogo = req.files.leagueLogo[0].filename;
     }
     if (req.files.firstTeamLogo) {
-      await unlinkAsync(`public/img/matches/${firstTeamLogo}`);
+      // const existedFile = await fs.access(
+      //   filePath(backgroundLogo),
+      //   fs.constants.F_OK
+      // );
+      // console.log(`File '${filePath}' exists`);
+
+      // if (existedFile) {
+      //   await unlinkAsync(`public/img/matches/${firstTeamLogo}`);
+      // }
+
       req.body.firstTeamLogo = req.files.firstTeamLogo[0].filename;
     }
     if (req.files.secondTeamLogo) {
-      await unlinkAsync(`public/img/matches/${secondTeamLogo}`);
+      // const existedFile = await fs.access(
+      //   filePath(backgroundLogo),
+      //   fs.constants.F_OK
+      // );
+      // console.log(`File '${filePath}' exists`);
+
+      // if (existedFile) {
+      //   await unlinkAsync(`public/img/matches/${secondTeamLogo}`);
+      // }
+
       req.body.secondTeamLogo = req.files.secondTeamLogo[0].filename;
     }
     const data = { ...req.body };
@@ -182,5 +224,15 @@ exports.createSport = factory.createOne(Sport);
 exports.deleteSports = factory.deleteMany(Sport);
 exports.deleteSport = factory.deleteOne(Sport);
 exports.updateSport = factory.updateOne(Sport);
-exports.getSport = factory.getOne(Sport);
+exports.getSport = catchAsync(async (req, res, next) => {
+  const eventData = await Sport.findById(req.params.id)
+    .populate("servers")
+    .exec();
+  console.log(eventData);
+  res.status(200).json({
+    status: "success",
+    data: eventData,
+  });
+});
+// factory.getOne(Sport);
 exports.getAllSports = factory.getAll(Sport);

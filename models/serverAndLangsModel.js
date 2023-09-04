@@ -9,17 +9,23 @@ const serversAndLanguagesSchema = new mongoose.Schema({
     english: {
       checked: { type: Boolean, default: false },
       num: Number,
-      channels: [{ name: String, serverValue: String }],
+      channels: [
+        { name: String, serverValue: { name: String, streamLinkUrl: String } },
+      ],
     },
     arabic: {
       checked: { type: Boolean, default: false },
       num: Number,
-      channels: [{ name: String, serverValue: String }],
+      channels: [
+        { name: String, serverValue: { name: String, streamLinkUrl: String } },
+      ],
     },
     spanish: {
       checked: { type: Boolean, default: false },
       num: Number,
-      channels: [{ name: String, serverValue: String }],
+      channels: [
+        { name: String, serverValue: { name: String, streamLinkUrl: String } },
+      ],
     },
   },
   moreLanguages: {
