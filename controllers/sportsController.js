@@ -230,6 +230,7 @@ exports.deleteSports = factory.deleteMany(Sport);
 exports.deleteSport = factory.deleteOne(Sport);
 exports.updateSport = factory.updateOne(Sport);
 exports.getSport = catchAsync(async (req, res, next) => {
+  console.log(req.params.id);
   const eventData = await Sport.findById(req.params.id)
     .populate("servers")
     .exec();
