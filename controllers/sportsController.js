@@ -20,12 +20,16 @@ exports.getCurrentEvents = catchAsync(async (req, res, next) => {
   console.log(query);
   const totalOtherMatches = await Sport.find({
     flagged: false,
+    playStream: { $lt: currentDate },
+    removeStream: { $gt: currentDate },
   }).countDocuments();
   const currentEvents = await Sport.find({
     ...query,
     playStream: { $lt: currentDate },
     removeStream: { $gt: currentDate },
   });
+  console.log(currentEvents);
+
   res.status(200).json({
     status: "success",
     data: currentEvents,
