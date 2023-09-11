@@ -10,13 +10,33 @@ const sportSchema = new mongoose.Schema({
     lowercase: true,
     required: [true, "please enter the sports category"],
   },
+  teamsTitle: {
+    type: String,
+    required: [
+      function () {
+        return this.firstTeamName == null && this.secondTeamName == null;
+        // return this.flagLogo == null;
+      },
+      "Please provide either First Team Name and Second Team Name, or a Title",
+    ],
+  },
   firstTeamName: {
     type: String,
-    required: [true, "please enter the first team name"],
+    required: [
+      function () {
+        return this.teamsTitle == null;
+      },
+      "Please provide either First Team Name and Second Team Name, or a Title",
+    ],
   },
   secondTeamName: {
     type: String,
-    required: [true, "please enter the second team name"],
+    required: [
+      function () {
+        return this.teamsTitle == null;
+      },
+      "Please provide either First Team Name and Second Team Name, or a Title",
+    ],
   },
   eventDate: {
     type: Date,
@@ -44,11 +64,28 @@ const sportSchema = new mongoose.Schema({
   },
   firstTeamLogo: {
     type: String,
-    // required: [true, "please enter the logo of the first team"],
+    // required: [
+    //   function () {
+    //     return this.flagLogo == null;
+    //   },
+    //   "Please provide either firstTeamLogo and secondTeamLogo, or flagLogo",
+    // ],
   },
   secondTeamLogo: {
     type: String,
-    // required: [true, "please enter the logo of the second team"],
+    required: [
+      function () {
+        return this.flagLogo == null;
+      },
+      "Please provide either firstTeamLogo and secondTeamLogo, or flagLogo",
+    ],
+  },
+  flagLogo: {
+    type: String,
+    //     required: [function() {
+    //       return this.firstTeamLogo == null && this.secondTeamLogo == null;
+    //     }, 'Please provide either firstTeamLogo and secondTeamLogo, or flagLogo']
+    //   }
   },
   playStream: {
     type: Date,

@@ -89,13 +89,14 @@ exports.getAll = (Model) =>
       .sort()
       .limitFields()
       .paginate();
-    // const doc = await features.query.explain();
+    const filtered = new APIFeatures(Model.find(filter), req.query)
+      .filter()
+      .countDocs();
     const doc = await features.query;
-
-    // SEND RESPONSE
+    const results = await filtered.query;
     res.status(200).json({
       status: "success",
-      results: doc.length,
+      results: results,
       data: {
         data: doc,
       },
