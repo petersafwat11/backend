@@ -81,19 +81,20 @@ exports.getOne = (Model, popOptions) =>
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    let filter = {};
-    if (req.params.tourId) filter = { tour: req.params.tourId };
+    // let filter = {};
+    // if (req.params.tourId) filter = { tour: req.params.tourId };
 
-    const features = new APIFeatures(Model.find(filter), req.query)
+    const features = new APIFeatures(Model.find(), req.query)
       .filter()
       .sort()
       .limitFields()
       .paginate();
-    const filtered = new APIFeatures(Model.find(filter), req.query)
+    const filtered = new APIFeatures(Model.find(), req.query)
       .filter()
       .countDocs();
     const doc = await features.query;
     const results = await filtered.query;
+    console.log(doc);
     res.status(200).json({
       status: "success",
       results: results,

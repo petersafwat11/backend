@@ -2,8 +2,8 @@ const fsPromise = require("fs").promises;
 // const fs = require("fs");
 // const util = require("util");
 // const path = require("path");
-
 const multer = require("multer");
+
 const Sport = require("../models/sportModel");
 const factory = require("./handlerFactory");
 const AppError = require("../utils/appError");

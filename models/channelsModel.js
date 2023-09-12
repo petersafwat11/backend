@@ -9,6 +9,10 @@ const channelsSchema = new mongoose.Schema({
     type: String,
     required: [true, "please chosse the mode for this channel!"],
   },
+  language: {
+    type: String,
+    required: [true, "please enter the language for this channel!"],
+  },
   streamLinkName: {
     type: String,
     required: [true, "please enter the stream link name for this channel!"],
@@ -18,6 +22,7 @@ const channelsSchema = new mongoose.Schema({
     required: [true, "please enter the stream link url for this channel!"],
   },
 });
+
 const Channels = mongoose.model("Channels", channelsSchema);
 
 module.exports = Channels;

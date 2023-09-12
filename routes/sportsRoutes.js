@@ -6,6 +6,7 @@ const authController = require("../controllers/authController");
 const router = express.Router();
 
 router.route("/currentEvents").get(sportsController.getCurrentEvents);
+router.route("/search").get(sportsController.getAllSports);
 router
   .route("/")
   .get(sportsController.getAllSports)

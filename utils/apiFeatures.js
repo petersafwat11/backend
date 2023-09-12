@@ -1,3 +1,5 @@
+const organizeSearchFeilds = require("./organizeSearchFeilds");
+
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
@@ -6,14 +8,30 @@ class APIFeatures {
 
   filter() {
     const queryObj = { ...this.queryString };
-    const excludedFields = ["page", "sort", "limit", "fields"];
+    const excludedFields = ["page", "sort", "limit", "fields", "searchValue"];
     excludedFields.forEach((el) => delete queryObj[el]);
-
     // 1B) Advanced filtering
     let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-    this.query = this.query.find(JSON.parse(queryStr));
+    queryStr = queryStr.replace(
+      /\b(gte|gt|lte|lt|or)\b/g,
+      (match) => `$${match}`
+    );
+    queryStr = JSON.parse(queryStr);
+    if (
+      queryStr.$or &&
+      this.queryString.searchValue &&
+      this.queryString.searchValue.length > 0
+    ) {
+      queryStr.$or = organizeSearchFeilds(
+        queryStr.$or,
+        this.queryString.searchValue
+      );
+    } else {
+      delete queryStr.$or;
+    }
+
+    this.query = this.query.find(queryStr);
 
     return this;
   }
