@@ -4,7 +4,6 @@ const channelsController = require("../controllers/channelsController");
 const authController = require("../controllers/authController");
 
 const router = express.Router();
-router.route("/search").get(channelsController.getAllChannels);
 
 router
   .route("/")

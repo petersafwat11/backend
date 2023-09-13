@@ -8,7 +8,14 @@ class APIFeatures {
 
   filter() {
     const queryObj = { ...this.queryString };
-    const excludedFields = ["page", "sort", "limit", "fields", "searchValue"];
+    const excludedFields = [
+      "page",
+      "sort",
+      "limit",
+      "fields",
+      "searchValue",
+      "skip",
+    ];
     excludedFields.forEach((el) => delete queryObj[el]);
     // 1B) Advanced filtering
     let queryStr = JSON.stringify(queryObj);
@@ -41,7 +48,9 @@ class APIFeatures {
       const sortBy = this.queryString.sort.split(",").join(" ");
       this.query = this.query.sort(sortBy);
     } else {
-      this.query = this.query.sort("-createdAt");
+      this.query = this.query.sort({ _id: 1 });
+
+      // this.query.sort("-createdAt") || this.query.sort({ _id: 1 });
     }
 
     return this;
@@ -66,8 +75,9 @@ class APIFeatures {
   paginate() {
     const page = this.queryString.page * 1 || 1;
     const limit = this.queryString.limit * 1 || 10;
-    const skip = (page - 1) * limit;
+    const skip = this.queryString.skip || (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
+    console.log(skip, limit);
     return this;
   }
 }
