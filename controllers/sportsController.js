@@ -73,11 +73,12 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage, fileFilter: multerFilter });
-exports.uploadTourImages = upload.fields([
+exports.uploadEventImages = upload.fields([
   { name: "backgroundLogo", maxCount: 1 },
   { name: "leagueLogo", maxCount: 1 },
   { name: "firstTeamLogo", maxCount: 1 },
   { name: "secondTeamLogo", maxCount: 1 },
+  { name: "flagLogo", maxCount: 1 },
 ]);
 exports.handleNewFiles = async (req, res, next) => {
   if (!req.files) {
@@ -95,6 +96,10 @@ exports.handleNewFiles = async (req, res, next) => {
   if (req.files.secondTeamLogo) {
     req.body.secondTeamLogo = req.files.secondTeamLogo[0].filename;
   }
+  if (req.files.flagLogo) {
+    req.body.flagLogo = req.files.flagLogo[0].filename;
+  }
+
   next();
 };
 exports.handleEditedFiles = async (req, res, next) => {
@@ -165,6 +170,10 @@ exports.handleEditedFiles = async (req, res, next) => {
 
       req.body.secondTeamLogo = req.files.secondTeamLogo[0].filename;
     }
+    if (req.files.flagLogo) {
+      req.body.flagLogo = req.files.flagLogo[0].filename;
+    }
+
     const data = { ...req.body };
     delete data.servers;
     req.body = data;

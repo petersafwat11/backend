@@ -14,7 +14,7 @@ router
     // authController.protect,
     // authController.restrictTo("Manager", "Moderator", "Admin"),
 
-    sportsController.uploadTourImages,
+    sportsController.uploadEventImages,
     sportsController.handleNewFiles,
     sportsController.createSport
   )
@@ -31,7 +31,7 @@ router
     // authController.protect,
     // authController.restrictTo("Manager", "Moderator", "Admin"),
 
-    sportsController.uploadTourImages,
+    sportsController.uploadEventImages,
     sportsController.handleEditedFiles,
     sportsController.updateSport
   )
