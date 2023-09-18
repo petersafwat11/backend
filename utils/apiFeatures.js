@@ -74,10 +74,10 @@ class APIFeatures {
 
   paginate() {
     const page = this.queryString.page * 1 || 1;
-    const limit = this.queryString.limit * 1 || 10;
+    const limit =
+      this.queryString.limit === "0" ? 0 : this.queryString.limit * 1 || 10;
     const skip = this.queryString.skip || (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
-    console.log(skip, limit);
     return this;
   }
 }

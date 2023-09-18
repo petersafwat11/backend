@@ -94,7 +94,6 @@ exports.getAll = (Model) =>
       .countDocs();
     const doc = await features.query;
     const results = await filtered.query;
-    console.log(doc);
     res.status(200).json({
       status: "success",
       results: results,

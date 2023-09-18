@@ -12,31 +12,12 @@ const catchAsync = require("../utils/catchAsync");
 
 // const AppError = require("../utils/appError");
 
-// exports.getCurrentEvents = catchAsync(async (req, res, next) => {
-//   const { query } = req;
-//   const excludedFields = ["page", "sort", "limit", "fields"];
-//   excludedFields.forEach((el) => delete query[el]);
-//   const currentDate = new Date();
-//   // console.log(query);
-//   const totalOtherMatches = await Sport.find({
-//     // flagged: false,
-//     // playStream: { $lt: currentDate },
-//     ...query,
-//     removeStream: { $gt: currentDate },
-//   }).countDocuments();
-//   const currentEvents = await Sport.find({
-//     ...query,
-//     // playStream: { $lt: currentDate },
-//     removeStream: { $gt: currentDate },
-//   });
-//   // console.log(currentEvents);
-
-//   res.status(200).json({
-//     status: "success",
-//     data: currentEvents,
-//     totalMatches: totalOtherMatches,
-//   });
-// });
+exports.filterOldData = catchAsync(async (req, res, next) => {
+  console.dir(req.query);
+  const dateNow = new Date();
+  req.query.removeStream = { gt: dateNow };
+  next();
+});
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image")) {

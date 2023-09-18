@@ -9,7 +9,9 @@ const router = express.Router();
 router.route("/search").get(sportsController.getAllSports);
 router
   .route("/")
-  .get(sportsController.getAllSports)
+  .get(
+    sportsController.filterOldData, 
+    sportsController.getAllSports)
   .post(
     // authController.protect,
     // authController.restrictTo("Manager", "Moderator", "Admin"),
