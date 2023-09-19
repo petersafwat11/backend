@@ -46,6 +46,7 @@ const sportSchema = new mongoose.Schema({
     type: Number,
     // required: [true, "please enter the id of the event"],
   },
+  
   eventLeague: {
     type: String,
     required: [true, "please enter the league of the event"],

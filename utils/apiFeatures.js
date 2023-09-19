@@ -15,6 +15,7 @@ class APIFeatures {
       "fields",
       "searchValue",
       "skip",
+      "otherCategory",
     ];
     excludedFields.forEach((el) => delete queryObj[el]);
     // 1B) Advanced filtering
@@ -38,6 +39,11 @@ class APIFeatures {
       delete queryStr.$or;
     }
 
+    if (this.queryString.otherCategory === "true") {
+      queryStr.sportCategory = {
+        $nin: ["football", "basketball", "nfl", "boxing"],
+      };
+    }
     this.query = this.query.find(queryStr);
 
     return this;
@@ -77,6 +83,7 @@ class APIFeatures {
     const limit =
       this.queryString.limit === "0" ? 0 : this.queryString.limit * 1 || 10;
     const skip = this.queryString.skip || (page - 1) * limit;
+    console.log(skip, limit);
     this.query = this.query.skip(skip).limit(limit);
     return this;
   }

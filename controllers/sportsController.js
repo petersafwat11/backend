@@ -219,7 +219,10 @@ exports.deleteOneItemRelatedData = async (req, res, next) => {
 
   next();
 };
-
+exports.test = (req, res, next) => {
+  console.dir(req.body);
+  next();
+};
 exports.createSport = factory.createOne(Sport);
 exports.deleteSports = factory.deleteMany(Sport);
 exports.deleteSport = factory.deleteOne(Sport);
