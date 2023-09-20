@@ -9,6 +9,7 @@ const newsSchema = new mongoose.Schema({
     type: String,
     required: [true, "please enter a breif description!"],
   },
+
   coverImage: {
     type: String,
     required: [true, "upload a related image about the news article!"],
@@ -16,7 +17,12 @@ const newsSchema = new mongoose.Schema({
   numOfSubnews: { type: Number, default: 1 },
 
   subNews: [
-    { index: Number, title: String, description: String, file: String },
+    {
+      index: Number,
+      title: String,
+      description: String,
+      image: String,
+    },
   ],
   createdAt: {
     type: Date,

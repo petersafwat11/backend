@@ -13,7 +13,6 @@ const catchAsync = require("../utils/catchAsync");
 // const AppError = require("../utils/appError");
 
 exports.filterOldData = catchAsync(async (req, res, next) => {
-  console.dir(req.query);
   const dateNow = new Date();
   req.query.removeStream = { gt: dateNow };
   next();
@@ -32,15 +31,6 @@ const storage = multer.diskStorage({
     cb(null, "public/img/matches/");
   },
   filename: function (req, file, cb) {
-    console.log(
-      `${file.originalname.slice(
-        0,
-        file.originalname.lastIndexOf(".")
-      )}-${Date.now()}.${file.originalname.slice(
-        file.originalname.lastIndexOf(".") + 1
-      )}`
-    );
-
     cb(
       null,
       `${file.originalname.slice(
@@ -228,11 +218,9 @@ exports.deleteSports = factory.deleteMany(Sport);
 exports.deleteSport = factory.deleteOne(Sport);
 exports.updateSport = factory.updateOne(Sport);
 exports.getSport = catchAsync(async (req, res, next) => {
-  console.log(req.params.id);
   const eventData = await Sport.findById(req.params.id)
     .populate("servers")
     .exec();
-  console.log(eventData);
   res.status(200).json({
     status: "success",
     data: eventData,

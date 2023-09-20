@@ -4,12 +4,14 @@ const newsController = require("../controllers/newsController");
 
 const router = express.Router();
 
-router.route("/").get(newsController.getAllnews);
-// .post(
-//   newsController.uploadTourImages,
-//   newsController.handleNewFiles,
-//   newsController.createSport
-// )
+router
+  .route("/")
+  .get(newsController.getAllnews)
+  .post(
+    newsController.uploadNewsImages,
+    newsController.handleNewFiles,
+    newsController.createNews
+  );
 // .delete(
 //   newsController.deleteManyItemsRelatedData,
 //   newsController.deleteSports

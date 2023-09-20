@@ -25,9 +25,9 @@ const feedbackSchema = new mongoose.Schema({
   },
 });
 feedbackSchema.pre("save", async function (next) {
-  const user = this; // the current user being saved
+  const doc = this; // the current user being saved
   const existedFeedbacks = await this.constructor.countDocuments({});
-  user.num = existedFeedbacks + 1;
+  doc.num = existedFeedbacks + 1;
   next();
 });
 
