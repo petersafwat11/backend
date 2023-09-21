@@ -3,13 +3,32 @@ const APIFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const factory = require("./handlerFactory");
 
+exports.getChannelByName = catchAsync(async (req, res) => {
+  const { channelName } = req.query;
+  const result = await Channels.findOne({
+    channelName: { $regex: channelName, $options: "i" },
+    mode: "Visible",
+  });
+  delete req.query.channelName;
+  const filtered = new APIFeatures(Channels.find(), req.query).filter();
+  const filteredChannels = await filtered.query;
+  const allLanguages = [
+    ...new Set(filteredChannels.map((channel) => channel.language)),
+  ];
+
+  res.status(200).json({
+    status: "success",
+    allLanguages,
+    data: {
+      data: result,
+    },
+  });
+});
+
 exports.getAllChannels =
   //  factory.getAll(Channels);
 
   catchAsync(async (req, res, next) => {
-    // let filter = {};
-    // if (req.params.tourId) filter = { tour: req.params.tourId };
-
     const features = new APIFeatures(Channels.find(), req.query)
       .sort()
       .filter()

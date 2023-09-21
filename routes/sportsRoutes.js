@@ -5,6 +5,10 @@ const authController = require("../controllers/authController");
 
 const router = express.Router();
 
+
+router
+  .route("/teamNames").get(sportsController.getMatchByTeamNames)
+
 // router.route("/currentEvents").get(sportsController.getCurrentEvents);
 // router.route("/search").get(sportsController.getAllSports);
 router

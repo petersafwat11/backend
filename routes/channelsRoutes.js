@@ -5,6 +5,11 @@ const authController = require("../controllers/authController");
 
 const router = express.Router();
 
+
+
+router
+  .route("/channelName").get(channelsController.getChannelByName)
+
 router
   .route("/")
   .get(channelsController.getAllChannels)
