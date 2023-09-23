@@ -29,6 +29,7 @@ exports.getAllChannels =
   //  factory.getAll(Channels);
 
   catchAsync(async (req, res, next) => {
+    console.log(req.query);
     const features = new APIFeatures(Channels.find(), req.query)
       .sort()
       .filter()

@@ -13,15 +13,25 @@ const catchAsync = require("../utils/catchAsync");
 // const AppError = require("../utils/appError");
 
 exports.getMatchByTeamNames = catchAsync(async (req, res) => {
-  const { firstTeamName, secondTeamName } = req.query;
+  // const { firstTeamName, secondTeamName } = req.query;
   const dateNow = new Date();
-  const result = await Sport.findOne({
-    firstTeamName: { $regex: firstTeamName.trim(), $options: "i" },
-    secondTeamName: { $regex: secondTeamName.trim(), $options: "i" },
-    // removeStream: { gt: dateNow },
-  })
-    .populate("servers")
-    .exec();
+  let findQuery;
+  if (req.query.firstTeamName && req.query.secondTeamName) {
+    findQuery = {
+      firstTeamName: { $regex: req.query.firstTeamName.trim(), $options: "i" },
+      secondTeamName: {
+        $regex: req.query.secondTeamName.trim(),
+        $options: "i",
+      },
+      // removeStream: { gt: dateNow },
+    };
+  } else {
+    findQuery = {
+      teamsTitle: { $regex: req.query.teamsTitle.trim(), $options: "i" },
+      // removeStream: { gt: dateNow },
+    };
+  }
+  const result = await Sport.findOne(findQuery).populate("servers").exec();
 
   res.status(200).json({
     status: "success",
