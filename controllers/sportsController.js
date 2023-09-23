@@ -16,8 +16,8 @@ exports.getMatchByTeamNames = catchAsync(async (req, res) => {
   const { firstTeamName, secondTeamName } = req.query;
   const dateNow = new Date();
   const result = await Sport.findOne({
-   firstTeamName: { $regex: firstTeamName.trim(), $options: 'i' } ,
-    secondTeamName:  { $regex: secondTeamName.trim(), $options: 'i' } , 
+    firstTeamName: { $regex: firstTeamName.trim(), $options: "i" },
+    secondTeamName: { $regex: secondTeamName.trim(), $options: "i" },
     // removeStream: { gt: dateNow },
   })
     .populate("servers")
@@ -89,89 +89,47 @@ exports.handleNewFiles = async (req, res, next) => {
   if (req.files.flagLogo) {
     req.body.flagLogo = req.files.flagLogo[0].filename;
   }
-
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, value] of Object.entries(req.body)) {
+    if (value === "null") {
+      req.body[key] = null;
+    }
+  }
   next();
 };
-exports.handleEditedFiles = async (req, res, next) => {
-  try {
-    // const unlinkAsync = util.promisify(fs.unlink);
-    if (!req.files) {
-      return next();
-    }
-
-    const editedItem = await Sport.findById(req.params.id);
-    // const filePath = (name) =>
-    //   path.join(__dirname, "public", "img", "matches", name);
-
-    if (!editedItem) {
-      next(new AppError("there is no doc found with that id", 404));
-    }
-    // const { backgroundLogo, leagueLogo, firstTeamLogo, secondTeamLogo } =
-    //   editedItem;
-
-    if (req.files.backgroundLogo) {
-      // const existedFile = await unlinkAsync(
-      //   `public/img/matches/${secondTeamLogo}`
-      // );
-      // fs.access(filePath(backgroundLogo), fs.constants.F_OK);
-      // console.log(`File '${filePath}' exists`);
-
-      // if (existedFile) {
-      //   await unlinkAsync(`public/img/matches/${backgroundLogo}`);
-      // }
-      req.body.backgroundLogo = req.files.backgroundLogo[0].filename;
-    }
-    if (req.files.leagueLogo) {
-      // const existedFile = await fs.access(
-      //   filePath(backgroundLogo),
-      //   fs.constants.F_OK
-      // );
-      // console.log(`File '${filePath}' exists`);
-
-      // if (existedFile) {
-      //   await unlinkAsync(`public/img/matches/${leagueLogo}`);
-      // }
-
-      req.body.leagueLogo = req.files.leagueLogo[0].filename;
-    }
-    if (req.files.firstTeamLogo) {
-      // const existedFile = await fs.access(
-      //   filePath(backgroundLogo),
-      //   fs.constants.F_OK
-      // );
-      // console.log(`File '${filePath}' exists`);
-
-      // if (existedFile) {
-      //   await unlinkAsync(`public/img/matches/${firstTeamLogo}`);
-      // }
-
-      req.body.firstTeamLogo = req.files.firstTeamLogo[0].filename;
-    }
-    if (req.files.secondTeamLogo) {
-      // const existedFile = await fs.access(
-      //   filePath(backgroundLogo),
-      //   fs.constants.F_OK
-      // );
-      // console.log(`File '${filePath}' exists`);
-
-      // if (existedFile) {
-      //   await unlinkAsync(`public/img/matches/${secondTeamLogo}`);
-      // }
-
-      req.body.secondTeamLogo = req.files.secondTeamLogo[0].filename;
-    }
-    if (req.files.flagLogo) {
-      req.body.flagLogo = req.files.flagLogo[0].filename;
-    }
-
-    const data = { ...req.body };
-    delete data.servers;
-    req.body = data;
-    next();
-  } catch (error) {
-    next(new AppError(error.message, error.statusCode));
+exports.handleEditedFiles = catchAsync(async (req, res, next) => {
+  if (!req.files) {
+    return next();
   }
-};
+
+  if (req.files.backgroundLogo) {
+    req.body.backgroundLogo = req.files.backgroundLogo[0].filename;
+  }
+  if (req.files.leagueLogo) {
+    req.body.leagueLogo = req.files.leagueLogo[0].filename;
+  }
+  if (req.files.firstTeamLogo) {
+    req.body.firstTeamLogo = req.files.firstTeamLogo[0].filename;
+  }
+  if (req.files.secondTeamLogo) {
+    req.body.secondTeamLogo = req.files.secondTeamLogo[0].filename;
+  }
+  if (req.files.flagLogo) {
+    req.body.flagLogo = req.files.flagLogo[0].filename;
+  }
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, value] of Object.entries(req.body)) {
+    if (value === "null") {
+      req.body[key] = null;
+    }
+  }
+  const data = { ...req.body };
+  delete data.servers;
+  req.body = data;
+  delete req.body.servers;
+
+  next();
+});
 exports.deleteManyItemsRelatedData = async (req, res, next) => {
   try {
     const events = await Sport.find({ _id: { $in: req.body } });

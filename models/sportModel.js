@@ -14,8 +14,7 @@ const sportSchema = new mongoose.Schema({
     type: String,
     required: [
       function () {
-        return this.firstTeamName == null && this.secondTeamName == null;
-        // return this.flagLogo == null;
+        return this.firstTeamName === null && this.secondTeamName === null;
       },
       "Please provide either First Team Name and Second Team Name, or a Title",
     ],
@@ -44,9 +43,9 @@ const sportSchema = new mongoose.Schema({
   },
   matchId: {
     type: Number,
-    // required: [true, "please enter the id of the event"],
+    default: null,
   },
-  
+
   eventLeague: {
     type: String,
     required: [true, "please enter the league of the event"],
@@ -74,12 +73,12 @@ const sportSchema = new mongoose.Schema({
   },
   secondTeamLogo: {
     type: String,
-    required: [
-      function () {
-        return this.flagLogo == null;
-      },
-      "Please provide either firstTeamLogo and secondTeamLogo, or flagLogo",
-    ],
+    // required: [
+    //   function () {
+    //     return this.flagLogo == null;
+    //   },
+    //   "Please provide either firstTeamLogo and secondTeamLogo, or flagLogo",
+    // ],
   },
   flagLogo: {
     type: String,

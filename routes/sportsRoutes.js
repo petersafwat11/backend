@@ -5,22 +5,21 @@ const authController = require("../controllers/authController");
 
 const router = express.Router();
 
-
-router
-  .route("/teamNames").get(sportsController.getMatchByTeamNames)
+router.route("/teamNames").get(sportsController.getMatchByTeamNames);
 
 // router.route("/currentEvents").get(sportsController.getCurrentEvents);
 // router.route("/search").get(sportsController.getAllSports);
 router
   .route("/")
   .get(
-    // sportsController.filterOldData, 
-    sportsController.getAllSports)
+    // sportsController.filterOldData,
+    sportsController.getAllSports
+  )
   .post(
     // authController.protect,
     // authController.restrictTo("Manager", "Moderator", "Admin"),
-    sportsController.test,
     sportsController.uploadEventImages,
+    sportsController.test,
     sportsController.handleNewFiles,
     sportsController.createSport
   )
@@ -36,10 +35,9 @@ router
   .patch(
     // authController.protect,
     // authController.restrictTo("Manager", "Moderator", "Admin"),
-
-    sportsController.test,
     sportsController.uploadEventImages,
     sportsController.handleEditedFiles,
+    // sportsController.test,
     sportsController.updateSport
   )
   .get(sportsController.getSport)
