@@ -51,11 +51,11 @@ class APIFeatures {
 
   sort() {
     if (this.queryString.sort) {
-      const sortBy = this.queryString.sort.split(",").join(" ");
-      this.query = this.query.sort(sortBy);
+      // const sortBy = this.queryString.sort.split(",").join(" ");
+
+      this.query = this.query.sort(this.queryString.sort);
     } else {
       this.query = this.query.sort({ _id: 1 });
-
       // this.query.sort("-createdAt") || this.query.sort({ _id: 1 });
     }
 
@@ -83,7 +83,6 @@ class APIFeatures {
     const limit =
       this.queryString.limit === "0" ? 0 : this.queryString.limit * 1 || 10;
     const skip = this.queryString.skip || (page - 1) * limit;
-    console.log("skip", skip, limit);
     this.query = this.query.skip(skip).limit(limit);
     return this;
   }

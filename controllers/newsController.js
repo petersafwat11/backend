@@ -5,12 +5,14 @@ const multer = require("multer");
 const News = require("../models/newsModel");
 const factory = require("./handlerFactory");
 const AppError = require("../utils/appError");
+const catchAsync = require("../utils/catchAsync");
 
 exports.getAllnews = factory.getAll(News);
 exports.getNewsItem = factory.getOne(News);
 exports.createNews = factory.createOne(News);
-
-
+exports.updateNews = factory.updateOne(News);
+exports.deleteNews = factory.deleteOne(News);
+exports.deleteManyNews = factory.deleteMany(News);
 exports.test = (req, res, next) => {
   console.dir("test");
   console.dir(req.body);
@@ -78,3 +80,46 @@ exports.handleNewFiles = async (req, res, next) => {
 
   next();
 };
+exports.handleEditedFiles = catchAsync(async (req, res, next) => {
+  const filesRecieved = req.files.map((file) => ({
+    [file.fieldname]: file.filename,
+  }));
+  filesRecieved.forEach((obj) => {
+    req.body[Object.keys(obj)[0]] = obj[Object.keys(obj)[0]];
+  });
+  const doc = await News.findById(req.params.id);
+  if (!doc) {
+    return next(new AppError(`No document found with that ID`, 404));
+  }
+  const subNews = [];
+  for (let i = 1; i <= Number(req.body.numOfSubnews); i += 1) {
+    const titleKey = `subNews-${i}-title`;
+    const descriptionKey = `subNews-${i}-description`;
+    const imageKey = `subNews-${i}-image`;
+
+    const subb = {
+      title: req.body[titleKey],
+      description: req.body[descriptionKey],
+      image:
+        req.body[imageKey] === "undefined" || req.body[imageKey] === "null"
+          ? doc.subNews.find((item) => item.index === i).image
+          : req.body[imageKey],
+      index: i,
+    };
+    subNews.push(subb);
+  }
+  const data = {
+    subNews: subNews,
+    title: req.body.title,
+    description: req.body.description,
+    numOfSubnews: req.body.numOfSubnews,
+    coverImage:
+      req.body.coverImage === "undefined" || req.body.coverImage === "null"
+        ? doc.coverImage
+        : req.body.coverImage,
+  };
+
+  req.body = data;
+
+  next();
+});

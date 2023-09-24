@@ -10,29 +10,33 @@ router
   .get(giveawayController.getAllFollowers)
   .post(giveawayController.createFollower)
   .delete(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
+    // authController.protect,
+    // authController.restrictTo("Manager", "Moderator", "Admin"),
     giveawayController.deleteFollowers
   );
 router
   .route("/event")
   .post(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
+    // authController.protect,
+    // authController.restrictTo("Manager", "Moderator", "Admin"),
+    giveawayController.uploadNewsImages,
+    giveawayController.handleNewFiles,
     giveawayController.createGiveawayPrize
   )
   .patch(
-    authController.protect,
-    authController.restrictTo("Manager", "Moderator", "Admin"),
-    giveawayController.updateGiveawayPrize
-  );
-router
-  .route("/winner")
-  .get(
     // authController.protect,
     // authController.restrictTo("Manager", "Moderator", "Admin"),
-    giveawayController.generateWinner
-  );
+    giveawayController.uploadNewsImages,
+    giveawayController.handleEditedFiles,
+
+    giveawayController.updateGiveawayPrize
+  )
+  .get(giveawayController.getEvent);
+router.route("/winner").get(
+  // authController.protect,
+  // authController.restrictTo("Manager", "Moderator", "Admin"),
+  giveawayController.generateWinner
+);
 
 // router
 //   .route("/:id")

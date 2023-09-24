@@ -11,23 +11,23 @@ router
     newsController.uploadNewsImages,
     newsController.handleNewFiles,
     newsController.createNews
+  )
+  .delete(
+    // newsController.deleteManyItemsRelatedData,
+    newsController.deleteManyNews
   );
-// .delete(
-//   newsController.deleteManyItemsRelatedData,
-//   newsController.deleteSports
-// );
 
 router
   .route("/:id")
-  // .patch(
-  //   newsController.uploadTourImages,
-  //   newsController.handleEditedFiles,
-  //   newsController.updateSport
-  // )
-  .get(newsController.getNewsItem);
-// .delete(
-//   newsController.deleteOneItemRelatedData,
-//   newsController.deleteSport
-// );
+  .patch(
+    newsController.uploadNewsImages,
+    newsController.handleEditedFiles,
+    newsController.updateNews
+  )
+  .get(newsController.getNewsItem)
+  .delete(
+    // newsController.deleteOneItemRelatedData,
+    newsController.deleteNews
+  );
 
 module.exports = router;

@@ -9,6 +9,7 @@ const factory = require("./handlerFactory");
 const AppError = require("../utils/appError");
 const ServersAndLangs = require("../models/serverAndLangsModel");
 const catchAsync = require("../utils/catchAsync");
+const APIFeatures = require("../utils/apiFeatures");
 
 // const AppError = require("../utils/appError");
 
@@ -214,4 +215,34 @@ exports.getSport = catchAsync(async (req, res, next) => {
   });
 });
 // factory.getOne(Sport);
-exports.getAllSports = factory.getAll(Sport);
+exports.getAllSports = catchAsync(async (req, res, next) => {
+  console.log(req.query);
+  const features = new APIFeatures(Sport.find(), req.query)
+    .filter()
+    .sort()
+    .paginate();
+  const allMatches = await features.query;
+  const numQuery = new APIFeatures(Sport.find(), req.query)
+    .filter()
+    .countDocs();
+  const num = await numQuery.query;
+  req.query.flagged = true;
+  req.query.limit = 10;
+  req.query.skip = 0;
+  const hotMatchesQuery = new APIFeatures(Sport.find(), req.query)
+    .filter()
+    .sort()
+    .paginate();
+  const hotMatches = await hotMatchesQuery.query;
+
+  res.status(200).json({
+    status: "success",
+    results: num,
+    hotMatches,
+    data: {
+      data: allMatches,
+    },
+  });
+});
+
+// factory.getAll(Sport);
