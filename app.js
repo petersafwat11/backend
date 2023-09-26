@@ -10,17 +10,8 @@ const cors = require("cors");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 const userRouter = require("./routes/userRoutes");
-const linksRouter = require("./routes/importantLinksRoutes");
-const newsRouter = require("./routes/newsRoutes");
-const conatctUsRouter = require("./routes/contactUsRoutes");
-const newsletterRouter = require("./routes/newsletterRoutes");
-const feedbackRouter = require("./routes/feedbackRoutes");
 const streamLinksRouter = require("./routes/streamLinkRoutes");
 const channelsRouter = require("./routes/channelsRoutes");
-const giveawayRouter = require("./routes/giveawayRoutes");
-const sportsRouter = require("./routes/sportsRoutes");
-const serversRouter = require("./routes/serversRoutes");
-const reportedLinksRouter = require("./routes/reportedLinksRoutes");
 
 const app = express();
 
@@ -74,17 +65,7 @@ app.use((req, res, next) => {
 // 3) ROUTES
 
 app.use("/api/users", userRouter);
-app.use("/api/links", linksRouter);
-app.use("/api/contact-us", conatctUsRouter);
-app.use("/api/newsletter", newsletterRouter);
-app.use("/api/feedback", feedbackRouter);
 app.use("/api/channels", channelsRouter);
-app.use("/api/giveaway", giveawayRouter);
-app.use("/api/reportedLinks", reportedLinksRouter);
-
-app.use("/api/news", newsRouter);
-app.use("/api/sports", sportsRouter);
-app.use("/api/servers", serversRouter);
 app.use("/api/streamLink", streamLinksRouter);
 
 app.all("*", (req, res, next) => {
